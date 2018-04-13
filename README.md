@@ -5,8 +5,9 @@ Sample project that shows how to integrate Google Pay with Datatrans
 
 Google Pay allows merchants to collect payments with the Payment Request API. It enables merchants to recieve encrypted payment information which can be forwarded to their Payment Processor. This Guide is intended for merchants who would like to integrate Google Pay with Datatrans. For more Information on Google Pay visit: https://pay.google.com/about/
 
-(Optional) Please also read the Google Pay Guide for Developers to understand flows and technology: https://developers.google.com/pay/api/
-https://developers.google.com/pay/api/web/setup
+(Optional) Please also read the Google Pay Guide for Developers to understand flows and technology: 
+- [Overview](https://developers.google.com/pay/api/)
+- [Guide for the Web] (https://developers.google.com/pay/api/web/setup)
 
 ### Prerequisites
 
@@ -28,7 +29,7 @@ This sample application demonstrates following parts of collecting a payment wit
 5. Forward the encrypted payment data to the "back-end"
 6. Create an xml request to authorize the transaction with Datatrans
 7. Forward the Google Pay data with the xml request to the Datatrans XML API
-8. Display results. 
+8. Display the results. 
 
 ### Installing
 
