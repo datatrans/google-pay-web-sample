@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Datatrans GooglePay Example</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/googlepay.css}"/>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var merchantId = [[${merchantId}]];
+        /*]]>*/
+    </script>
+
+    <script src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js"></script>
+    <script src="https://payments.developers.google.com/js/apis/pay.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</head>
+<body>
+
+<nav class="navbar  navbar-light custom-navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            Datatrans Google Pay Showcase
+        </div>
+    </div>
+</nav>
+<br>
+<div class="container">
+    <div class="row" >
+        <div class="alert alert-danger" id="info-message">
+            Your browser is not supported by GooglePay
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-4 mb-2">
+            <form>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number"  class="form-control col-md-2" id="amount" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label for="currency">Currency</label>
+                    <input maxlength="3" type="text" class="form-control col-md-3" id="currency" placeholder="CHF">
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="phoneRequired">
+                    <label class="form-check-label" for="phoneRequired">Phone Number Required</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="emailRequired">
+                    <label class="form-check-label" for="emailRequired">E-Mail Required</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="shippingRequired">
+                    <label class="form-check-label" for="shippingRequired">Shipping Address Required</label>
+                </div>
+                <button type="button" onclick="buildPaymentRequest();" class="btn btn-primary">Build Google Pay Request</button>
+            </form>
+        </div>
+        <div class="col-md-4 mb-2">
+                <button id="google-pay-button" onclick="requestPayment();" class="googlepay short" title="Google Pay" disabled=""></button>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div id="transactionStatus" class="transactionStatus">
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="eventConsole" id="console"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

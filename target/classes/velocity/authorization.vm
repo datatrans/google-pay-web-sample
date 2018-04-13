@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<authorizationService version="1">
+    <body merchantId="$merchantId">
+    <transaction refno="$refno">
+        <request>
+            <googlePayData><![CDATA[$googlePayData]]></googlePayData>
+            <reqtype>NOA</reqtype>
+            <transtype>05</transtype>
+            <sign>$sign</sign>
+            <amount>$amount</amount>
+            <currency>$currency</currency>
+        </request>
+    </transaction>
+    </body>
+</authorizationService>

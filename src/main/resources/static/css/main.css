@@ -1,0 +1,49 @@
+.custom-navbar{
+    background-color: #4285f4;
+    color: white;
+}
+
+.eventConsole{
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(201,201,201,1);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(201,201,201,1);
+    box-shadow: 0px 0px 5px 0px rgba(201,201,201,1);
+    color: red;
+    overflow-y: scroll;
+}
+.eventConsole p{
+    opacity: 0.75;
+    padding-left: 1%;
+    white-space: pre-line;
+}
+
+.success {
+    color: green;
+}
+
+.failure {
+    color: red;
+}
+
+.transactionStatus{
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(201,201,201,1);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(201,201,201,1);
+    box-shadow: 0px 0px 5px 0px rgba(201,201,201,1);
+}
+
+.transactionStatus p{
+    padding-left: 1%;
+}
+
+#currency{
+    text-transform: uppercase;
+}
+
+#info-message{
+    display: none;
+    width: 100%;
+}
+
+body{
+    color: #212121;
+    background-color: #FAFAFA;
+}
