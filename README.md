@@ -56,8 +56,72 @@ Open http://localhost:8080/ in Google Chrome.
 
 Since currently Google Pay is not yet available for Chrome Desktop you need to make this web app available for your android device. A tool to expose your local webserver through a public URL is for example [Ngrok] (https://ngrok.com/). 
 
+## Testing
+
+1. Open the url you defined in your chrome browser for android.
+2. Fill the inputs and tap/click Build Google Pay Request
+3. Click the Google Pay button that has been enabled
+4. Select your payment method (omitted in Screenshots due to security policies)
+5. Result is displayed
+
+![Sample Screenshots](doc/sample.gif)
+
+### Authorisation with Datatrans
+Check out `src/main/java/ch/datatrans/examples/googlepay/client/DatatransClient.java` to see how the authorisation is done.
+
+Sample request:
+
+```XML
+<?xml version="1.0" encoding="UTF-8" ?>
+<authorizationService version="1">
+  <body merchantId="$merchantId">
+    <transaction refno="$refno">
+      <request>
+        <googlePayData><![CDATA[$token]]></googlePayData>
+        <reqtype>NOA</reqtype>
+        <transtype>05</transtype>
+        <sign>$sign</sign>
+      </request>
+    </transaction>
+  </body>
+</authorizationService>
+```
+
+Sample response:
+
+```XML
+<?xml version="1.0" encoding="UTF-8" ?>
+<authorizationService version="1">
+  <body merchantId="$merchantId" status="accepted">
+    <transaction refno="$refno" trxStatus="response">
+      <request>
+        <googlePayData><![CDATA[$token]]></googlePayData>
+        <reqtype>NOA</reqtype>
+        <transtype>05</transtype>
+        <sign>$sign</sign>
+      </request>
+      <response>
+        <responseCode>01</responseCode>
+        <responseMessage>Authorized</responseMessage>
+        <uppTransactionId>160823101329060450</uppTrasactionId>
+        <authorizationCode>538050451</authorizationCode>
+        <acqAuthorizationCode>101538</acqAuthorizationCode>
+        <aliasCC>70119122433810042</aliasCC>
+        <expy>18</expy>
+        <expm>12</expm>
+      </response>
+    </transaction>
+  </body>
+</authorizationService>
+```
+
+A successful call will return `<body>`’s attribute `status="accepted"` and `<transaction>`’s `trxStatus="response"` as 
+well as a new `<response>` element containing the responseCode. A responseCode equal to "01" or "02" indicates
+an authorized transaction. Elements aliasCC, expy and expm will be returned only if the merchant uses credit card aliases.
+
 ## Remarks
 - This is sample code never ever use this code in production! 
+- If you have questions please raise an issues and add the label "question".
 
 
 ## Appendix 
