@@ -66,6 +66,16 @@ Since currently Google Pay is not yet available for Chrome Desktop you need to m
 
 ![Sample Screenshots](doc/sample.gif)
 
+On your Android device / Google account its the easiest if you just configure a real credit card. Authorizations whith real cards will be declined on the Datatrans test system (https://pilot.datatrans.biz). So don't worry, your card will not be charged. In order to get some successful transactions Datatrans has the following logic in place (only on the test system obviously):
+
+If a valid Google Pay token is sent we do the following replacements:
+
+cardno=4242 4242 4242 4242
+expm=12
+expy=18
+
+
+
 ### Authorisation with Datatrans
 Check out `src/main/java/ch/datatrans/examples/googlepay/client/DatatransClient.java` to see how the authorisation is done.
 
