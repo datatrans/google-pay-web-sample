@@ -58,7 +58,7 @@ Google Pay can be tested using any supported web browser: Google Chrome, Mozilla
 
 ## Testing
 
-1. Open the URL you defined in your Chrome browser for Android.
+1. Open the URL you defined in your browser.
 2. Fill the inputs and tap/click Build Google Pay Request
 3. Click the Google Pay button that has been enabled
 4. Select your payment method (omitted in Screenshots due to security policies)
