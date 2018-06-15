@@ -52,9 +52,9 @@ To run the app execute the main class GooglepayApplication.java.
 
 Open http://localhost:8080/ in Google Chrome.
 
-### Making the app accessible for your phone
+### Testing the app
 
-Since currently Google Pay is not yet available for Chrome Desktop you need to make this web app available for your Android device. A tool to expose your local webserver through a public URL is for example [Ngrok](https://ngrok.com/). 
+Google Pay can be tested using any supported web browser: Google Chrome, Mozilla Firefox, Apple Safari, Opera, or UCWeb UC Browser on a PC or mobile device. However if you need to make this web app available for your mobile device, a tool to expose your local webserver through a public URL is for example Ngrok. [Ngrok](https://ngrok.com/). 
 
 ## Testing
 
