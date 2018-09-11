@@ -35,9 +35,6 @@ function getGooglePayTransactionInfo() {
 
 function getGooglePaymentDataConfiguration() {
     var paymentDataConfiguration =  {
-        // @todo a merchant ID is available for a production environment after approval by Google
-        // @see {@link https://developers.google.com/pay/api/web/test-and-deploy|Test and deploy}
-        merchantId: '01234567890123456789',
         paymentMethodTokenizationParameters: tokenizationParameters,
         allowedPaymentMethods: allowedPaymentMethods,
         cardRequirements: {
