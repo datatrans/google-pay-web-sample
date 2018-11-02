@@ -8,6 +8,7 @@ Google Pay allows merchants to collect payments with the Payment Request API. It
 (Optional) Please also read the Google Pay Guide for Developers to understand flows and technology: 
 - [Overview](https://developers.google.com/pay/api/)
 - [Guide for the Web](https://developers.google.com/pay/api/web/setup)
+- [Codelabs Introduction and Sample](https://codelabs.developers.google.com/codelabs/pay-web-checkout/)
 
 ### Prerequisites
 
