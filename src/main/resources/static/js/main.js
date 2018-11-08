@@ -1,18 +1,38 @@
-var allowedPaymentMethods = ['CARD', 'TOKENIZED_CARD'];
+var allowedPaymentMethods = ['PAN_ONLY', 'CRYPTOGRAM_3DS'];
 var allowedCardNetworks = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
-var paymentRequest;
+var googlePayClient = new google.payments.api.PaymentsClient({environment: "TEST"});
+var paymentDataRequest;
 
-/**
- * The Google Pay API response will return an encrypted payment method capable of
- * being charged by a supported gateway after shopper authorization
- */
 var tokenizationParameters = {
-    tokenizationType: 'PAYMENT_GATEWAY',
+    type: 'PAYMENT_GATEWAY',
     parameters: {
         'gateway': 'datatrans',
         'gatewayMerchantId': merchantId
     }
-}
+};
+
+var baseRequest = {
+    apiVersion: 2,
+    apiVersionMinor: 0
+};
+
+var baseCardPaymentMethod = {
+    type: 'CARD',
+    parameters: {
+        allowedAuthMethods: allowedPaymentMethods,
+        allowedCardNetworks: allowedCardNetworks,
+    }
+};
+
+var cardPaymentMethod = $.extend(
+    {},
+    baseCardPaymentMethod,
+    {
+        tokenizationSpecification: tokenizationParameters
+    }
+);
+
+var isReadToPayRequestObject = $.extend({},baseRequest,{allowedPaymentMethods: [baseCardPaymentMethod]});
 
 /**
  * Initialize a Google Pay API client
@@ -23,7 +43,7 @@ function getGooglePaymentsClient() {
     return (new google.payments.api.PaymentsClient({environment: 'TEST'}));
 }
 
-function getGooglePayTransactionInfo() {
+function getGoogleTransactionInfo() {
     var amount = $("#amount").val();
     var currency = $("#currency").val();
     return {
@@ -34,32 +54,36 @@ function getGooglePayTransactionInfo() {
 }
 
 function getGooglePaymentDataConfiguration() {
-    var paymentDataConfiguration =  {
-        paymentMethodTokenizationParameters: tokenizationParameters,
-        allowedPaymentMethods: allowedPaymentMethods,
-        cardRequirements: {
-            allowedCardNetworks: allowedCardNetworks
-        }
+    var paymentDataRequest = $.extend({}, baseRequest);
+    paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+    paymentDataRequest.merchantInfo = {
+        merchantId: '01234567890123456789',
+        merchantName: 'Datatrans Web Sample'
     };
 
     if($("#shippingRequired").is(':checked')){
-            paymentDataConfiguration.shippingAddressRequired = true;
+        paymentDataRequest.shippingAddressRequired = true;
+        paymentDataRequest.shippingAddressParameters = {};
     }
 
     if($("#emailRequired").is(':checked')){
-        paymentDataConfiguration.emailRequired = true;
+        paymentDataRequest.emailRequired = true;
     }
 
+    var billingAddressParameters ={};
+
     if($("#phoneRequired").is(':checked')){
-        paymentDataConfiguration.phoneNumberRequired = true;
+        billingAddressParameters.phoneNumberRequired = true;
     }
 
     if($("#billingAddressRequired").is(':checked')){
-        paymentDataConfiguration.cardRequirements.billingAddressRequired = true;
-        paymentDataConfiguration.cardRequirements.billingAddressFormat = "FULL"
+        paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;
+        billingAddressParameters.format = "FULL";
     }
 
-    return paymentDataConfiguration;
+    paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressParameters = billingAddressParameters;
+
+    return paymentDataRequest;
 }
 
 function log(message){
@@ -68,30 +92,33 @@ function log(message){
 
 function buildPaymentRequest() {
     cleanup();
-    getGooglePaymentsClient().isReadyToPay({allowedPaymentMethods: allowedPaymentMethods})
-        .then(function(response) {
-            if (!response.result) {
-               log("Client is not supported for GooglePay");
-            }else{
-                $("#google-pay-button").removeAttr("disabled");
-                paymentRequest = getGooglePaymentDataConfiguration();
-                paymentRequest.transactionInfo = getGooglePayTransactionInfo();
-                log("Payment request built and button enabled, ready to pay");
-            }
-        })
-        .catch(function(err) {
-            console.log(err)
-        });
+    if(validate()){
+        googlePayClient.isReadyToPay(isReadToPayRequestObject)
+            .then(function(response) {
+                if (!response.result) {
+                    log("Client is not supported for GooglePay");
+                }else{
+                    $("#google-pay-button").removeAttr("disabled");
+                    paymentDataRequest = getGooglePaymentDataConfiguration();
+                    paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+                    log("Payment request built and button enabled, ready to pay");
+                }
+            })
+            .catch(function(err) {
+                console.log(err)
+            });
+    }
+
 }
 
 function requestPayment(){
     log("Google Pay button clicked - payment request started");
-    if(paymentRequest != null){
-        getGooglePaymentsClient().loadPaymentData(paymentRequest)
+    if(paymentDataRequest != null){
+        googlePayClient.loadPaymentData(paymentDataRequest)
             .then(function(paymentData) {
-                var requestData = {googlePayData: paymentData.paymentMethodToken.token}
-                requestData.currency = paymentRequest.transactionInfo.currencyCode;
-                requestData.amount = paymentRequest.transactionInfo.totalPrice;
+                var requestData = {googlePayData: paymentData.paymentMethodData.tokenizationData.token}
+                requestData.currency = paymentDataRequest.transactionInfo.currencyCode;
+                requestData.amount = paymentDataRequest.transactionInfo.totalPrice;
                 log("Payment request successful, transmitting data to Datatrans");
                 $.ajax({
                     type: 'POST',
@@ -117,7 +144,7 @@ function requestPayment(){
                         }
 
                 });
-                paymentRequest = null;
+                paymentDataRequest = null;
             })
             .catch(function(err) {
                 log("Failed to collect payment, check developer console");
@@ -136,8 +163,25 @@ function cleanup() {
 
 }
 
+function validate(){
+    var amount = $("#amount").val();
+    var currency = $("#currency").val();
+
+    if(!amount || amount =="" || amount == undefined){
+        log("Amount is mandatory!");
+        return false;
+    }
+
+    if(!currency || currency =="" || currency == undefined){
+        log("Currency is mandatory!")
+        return false;
+    }
+
+    return true;
+}
+
 $("document").ready(function () {
-    getGooglePaymentsClient().isReadyToPay({allowedPaymentMethods: allowedPaymentMethods})
+    googlePayClient.isReadyToPay(isReadToPayRequestObject)
         .then(function(response) {
             if (!response.result) {
                 $("#info-message").show();
