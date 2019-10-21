@@ -16,6 +16,8 @@ Google Pay allows merchants to collect payments with the Payment Request API. It
 2. Maven installed on your local dev system
 3. Google Chrome, Mozilla Firefox, Apple Safari, or UCWeb UC Browser
 4. A google account that has a payment method installed (https://support.google.com/payments/answer/6220309)
+5. A [datatrans-merchant-id](https://testaccount.datatrans.com/testaccounts)
+6. A GooglePay merchant-id for productive transactions (https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist)
 5. Some basic experience with Spring Boot
 6. Some understanding of Google Pay and Payment Request API
 
